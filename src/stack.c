@@ -18,8 +18,9 @@ void freeStack(Stack *stack)
 }
 
 void enlargeStack(Stack* stack)
-{
-    bit* new_stack = realloc(stack->stack, stack->size + STACK_SIZE);
+{   
+    stack->size += STACK_SIZE;
+    bit* new_stack = realloc(stack->stack, stack->size * sizeof(bit));
     stack->stack = new_stack;
 }
 

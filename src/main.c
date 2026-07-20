@@ -1,31 +1,12 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "../include/stack.h"
+#include "../include/macro.h"
+#include "../include/defines.h"
 
-
-#define LINE_SIZE 120
-#define COMMENT ';'
-#define MACRO '?'
-
-
-#define FormatBool(b) ((b) ? "true" : "false")
-#define GetLength(arr) (sizeof(arr)/sizeof(arr[0]))
-
-
-#define iswhite(str) isspace(str) || str == 0 
-
-#define NextChar do{\
-lineIndex++;\
-}while(iswhite(line[lineIndex]));\
-if(lineIndex >= strlen(line)){lineIndex = -1;}
-
-#define PrintLine for(int _ = lineIndex; _ < strlen(line); _++){\
-printf("%c", line[_]);\
-}
-
-#define IgnoreComment if(line[lineIndex] == COMMENT){continue;}
 
 FILE *file_ptr;
 char *line;
@@ -52,7 +33,8 @@ char* readWord(char* line, int* lineIndex)
 int preprocess()
 {
     file_ptr = fopen("Input.nd", "r");
-    Stack* stack = newStack();
+    //Stack* stack = newStack();
+    MacroList* list = newMacroList();
     int inMacro = 0;
 
     /* scan loop + code inside it. */
@@ -69,10 +51,19 @@ int preprocess()
         {
             inMacro = !inMacro;
 
+            if(inMacro)
+            {
+                NextChar;
+                char* name = readWord(line, lineIndex);
+            }
             // if in macro readword = name
         }
 
         // if in macro read and add to macro code
+        if(inMacro)
+        {
+            // add to macro code
+        }
         
         PrintLine;
     
@@ -82,6 +73,16 @@ int preprocess()
 
 int main()
 {
+    MacroList* l = newMacroList();
+    printf("hello \n");
+    insert(l, "eyal", "locker");
+
+    printf("%s\n", l->list->name);
+
+    freeList(l);
+    return 0;
+
+    
     preprocess();
     return 0;
 }
