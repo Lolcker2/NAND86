@@ -35,6 +35,12 @@ int preprocess()
     file_ptr = fopen("Input.nd", "r");
     //Stack* stack = newStack();
     MacroList* list = newMacroList();
+
+    // outsource to a dedicated file
+    size_t capacity = LINE_SIZE * MACRO_DEFAULT_LINE_NUMBER; 
+    char macroLines[capacity];
+    int macroIndex = 0;
+
     int inMacro = 0;
 
     /* scan loop + code inside it. */
@@ -62,6 +68,13 @@ int preprocess()
         // if in macro read and add to macro code
         if(inMacro)
         {
+            for(;lineIndex < LINE_SIZE && line[lineIndex] != "\n" && line[lineIndex] != "\0"
+                && line[lineIndex] != EOF;lineIndex++, macroIndex++)
+            {
+                if(macroIndex) // string overflow
+
+                macroLines[macroIndex] = line[lineIndex];
+            }
             // add to macro code
         }
         
