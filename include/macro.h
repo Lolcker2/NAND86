@@ -3,7 +3,6 @@
 #include <stddef.h>
 
 #define MACRO_LIST_SIZE 10
-
 #define MACRO_DEFAULT_LINE_NUMBER 10
 
 typedef struct
@@ -17,7 +16,6 @@ typedef struct
     size_t size;
     int last;
     MacroEntry* list;
-    /* data */
 }MacroList;
 
 

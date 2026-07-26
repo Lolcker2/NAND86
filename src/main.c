@@ -6,6 +6,7 @@
 #include "../include/stack.h"
 #include "../include/macro.h"
 #include "../include/defines.h"
+#include "../include/dstring.h"
 
 
 FILE *file_ptr;
@@ -19,7 +20,7 @@ char* readWord(char* line, int* lineIndex)
     char scanned[LINE_SIZE];
     char* result;
     int j = 0;
-    for(; *lineIndex < LINE_SIZE && !iswhite(line[*lineIndex]); ++j)
+    for(; *lineIndex < LINE_SIZE && !iswhite(line[*lineIndex]); ++j, ++(*lineIndex))
     {
         scanned[j] = line[*lineIndex];       /* update the name of the label */
     }
@@ -36,11 +37,8 @@ int preprocess()
     //Stack* stack = newStack();
     MacroList* list = newMacroList();
 
-    // outsource to a dedicated file
-    size_t capacity = LINE_SIZE * MACRO_DEFAULT_LINE_NUMBER; 
-    char macroLines[capacity];
-    int macroIndex = 0;
-
+    Dstring* MacroLines;
+    char* name;
     int inMacro = 0;
 
     /* scan loop + code inside it. */
@@ -52,52 +50,50 @@ int preprocess()
         NextChar;
         IgnoreComment;
 
-
+        // begining and end of the macro's definition
         if(line[lineIndex] == MACRO)
         {
+            printf("macro\n");
             inMacro = !inMacro;
 
             if(inMacro)
             {
                 NextChar;
-                char* name = readWord(line, lineIndex);
+                name = readWord(line, &lineIndex);
+                printf("macro name %s\n", name);
+                MacroLines = newDstring();
             }
-            // if in macro readword = name
+            else 
+            {
+                
+                printf("macro code\n");
+                insert(list, name, MacroLines->string);
+                // reset macrolines
+                // reset name
+            }
+
+            continue; // skip to the next line
         }
 
         // if in macro read and add to macro code
         if(inMacro)
         {
-            for(;lineIndex < LINE_SIZE && line[lineIndex] != "\n" && line[lineIndex] != "\0"
-                && line[lineIndex] != EOF;lineIndex++, macroIndex++)
-            {
-                if(macroIndex) // string overflow
-
-                macroLines[macroIndex] = line[lineIndex];
-            }
-            // add to macro code
+            append(MacroLines, line);
         }
         
         PrintLine;
     
     }
-    return 0;
+
+    printf("[name]: %s \n [code]: %s \n", list->list->name, list->list->code);
+    return EXIT_SUCCESS;
 }
 
 int main()
 {
-    MacroList* l = newMacroList();
-    printf("hello \n");
-    insert(l, "eyal", "locker");
-
-    printf("%s\n", l->list->name);
-
-    freeList(l);
-    return 0;
-
     
     preprocess();
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 

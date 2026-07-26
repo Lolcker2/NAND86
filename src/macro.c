@@ -31,7 +31,7 @@ void insert(MacroList* list, char* name, char* code)
     }
     
     list->list[++list->last].name = name;
-    list->list[++list->last].code = code;
+    list->list[list->last].code = code;
 }
 
 // add insert for just a name?

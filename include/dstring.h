@@ -1,6 +1,10 @@
 #ifndef DSTR_H
 #define DSTR_H
 #include <ctype.h>
+#include <string.h>
+
+
+#define DSTR_SIZE 1024
 
 typedef struct 
 {
@@ -13,6 +17,6 @@ typedef struct
 Dstring* newDstring();
 void freeString(Dstring* dstr);
 void append(Dstring* dstr, char* str);
-// enlarge string
+void enlargeString(Dstring* str);
 
 #endif
